@@ -1,16 +1,16 @@
 // اتصال Web3
 async function connectWallet() {
-  if (typeof window.ethereum !== 'undefined') {
+  if (typeof window.ethereum !== "undefined") {
     try {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       window.web3 = new Web3(window.ethereum);
       const accounts = await web3.eth.getAccounts();
       const userAddress = accounts[0];
       console.log("Wallet connected:", userAddress);
-      document.getElementById("walletAddress").innerText = Wallet: ${userAddress};
+      document.getElementById("walletAddress").innerText = آدرس شما: ${userAddress};
     } catch (err) {
       console.error("User denied access", err);
-      alert("اتصال رد شد. لطفاً اجازه اتصال بدهید.");
+      alert("اتصال رد شد. لطفاً دسترسی را تایید کنید.");
     }
   } else {
     alert("MetaMask نصب نشده است. لطفاً نصب کنید.");
