@@ -4,18 +4,20 @@ let lgdAbi = []; // بعداً فایل contract.js ساخته میشه و ABI �
 
 // اتصال به متامسک
 async function connectWallet() {
-  if (window.ethereum) {
+  if (typeof window.ethereum !== 'undefined') {
     try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      userAddress = accounts[0];
-      document.getElementById("userAddress").innerText = "Your Wallet: " + userAddress;
-
-      await loadBalance();
-    } catch (error) {
-      console.error("Connection Error:", error);
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      window.web3 = new Web3(window.ethereum);
+      const accounts = await web3.eth.getAccounts();
+      const userAddress = accounts[0];
+      console.log("Wallet connected:", userAddress);
+      document.getElementById("walletAddress").innerText = Wallet: ${userAddress};
+    } catch (err) {
+      console.error("User denied access", err);
+      alert("اتصال رد شد. لطفاً اجازه اتصال بدهید.");
     }
   } else {
-    alert("لطفاً MetaMask را نصب کنید.");
+    alert("MetaMask نصب نشده است. لطفاً نصب کنید.");
   }
 }
 
