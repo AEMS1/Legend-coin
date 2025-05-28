@@ -10,7 +10,8 @@
     <h1>🚀 Mining Game</h1>
     <p>با توکن LGD وارد بازی شوید و امتیاز کسب کنید!</p>
 
-    <button id="connectWallet">🔗 اتصال کیف پول</button>
+    <button onclick="connectWallet()">اتصال کیف پول</button>
+<p id="walletAddress">آدرس شما: </p>
 
     <div id="userInfo" class="hidden">
       <p><strong>آدرس شما:</strong> <span id="userAddress"></span></p>
@@ -26,5 +27,6 @@
   </div>
 
   <script src="main.js"></script>
+  <script src="contract.js"></script>
 </body>
 </html>
