@@ -3,25 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LGD Chess Arena</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Connect Wallet</title>
 </head>
-<body>
-  <div class="container">
-    <h1>♟ LGD Chess Arena</h1>
-    <p>Entry Fee: 250,000 LGD | Winner Takes All (minus 1.5%)</p>
+<body style="font-family: sans-serif; text-align: center; margin-top: 100px;">
+  <h1>LGD Arena</h1>
+  <button id="connectWallet" style="padding: 10px 20px; font-size: 16px;">Connect Wallet</button>
+  <p id="walletAddress">Not connected</p>
 
-    <button id="connectWallet">🔗 Connect Wallet</button>
-    <div id="walletAddress" class="wallet-box"></div>
-
-    <button id="startGame" disabled>🎮 Start New Game</button>
-
-    <h2>🕹 Active Games</h2>
-    <ul id="activeGamesList"></ul>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
-  <script src="abi.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
