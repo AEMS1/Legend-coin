@@ -1,33 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Mining Game - LGD Token</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LGD Chess Arena</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="container">
-    <h1>🚀 Mining Game</h1>
-    <p>با توکن LGD وارد بازی شوید و امتیاز کسب کنید!</p>
+    <h1>♟ LGD Chess Arena</h1>
+    <p>Entry Fee: 250,000 LGD | Winner Takes All (minus 1.5%)</p>
 
-    <button onclick="connectWallet()">اتصال کیف پول</button>
-<p id="walletAddress">آدرس شما: </p>
+    <button id="connectWallet">🔗 Connect Wallet</button>
+    <div id="walletAddress" class="wallet-box"></div>
 
-    <div id="userInfo" class="hidden">
-      <p><strong>آدرس شما:</strong> <span id="userAddress"></span></p>
-      <p><strong>مقدار LGD:</strong> <span id="tokenBalance">0</span> LGD</p>
-      <p><strong>امتیاز شما:</strong> <span id="userPoints">0</span></p>
+    <button id="startGame" disabled>🎮 Start New Game</button>
 
-      <div class="menu">
-        <a href="game.html">🎮 ورود به بازی</a>
-        <a href="upgrades.html">⚙️ ارتقاء تجهیزات</a>
-        <a href="withdraw.html">💰 برداشت امتیاز</a>
-      </div>
-    </div>
+    <h2>🕹 Active Games</h2>
+    <ul id="activeGamesList"></ul>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.7.5/dist/web3.min.js"></script>
-  <script src="contract.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+  <script src="abi.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
