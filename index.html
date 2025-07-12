@@ -9,22 +9,25 @@
 <body>
   <div class="container">
     <h1>AEMS DEX</h1>
-    <button id="connectWallet">Connect Wallet</button>
-    
+    <button id="connectWallet">🔌 Connect Wallet</button>
+
     <div class="swap-box">
-      <label>From:</label>
-      <select id="fromToken"></select>
-      <input type="number" id="fromAmount" placeholder="Amount" />
+      <div class="input-group">
+        <label>From</label>
+        <select id="fromToken"></select>
+        <input type="number" id="fromAmount" placeholder="Amount"/>
+      </div>
 
-      <label>To:</label>
-      <select id="toToken"></select>
-      <input type="text" id="toAmount" placeholder="Estimated Amount" readonly />
+      <div class="input-group">
+        <label>To</label>
+        <select id="toToken"></select>
+        <input type="text" id="toAmount" readonly placeholder="Estimated Amount"/>
+      </div>
 
-      <button id="swapButton">Swap</button>
+      <button id="swapButton">🔁 Swap</button>
+      <p id="statusMessage"></p>
+      <p id="priceInfo">Live Price: -</p>
     </div>
-
-    <p id="priceInfo">Price: -</p>
-    <p id="statusMessage"></p>
   </div>
 
   <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
