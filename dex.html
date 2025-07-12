@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AEMS DEX</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
+  <script src="tokens.js"></script>
+</head>
+<body>
+  <div class="dex-container">
+    <h1>AEMS DEX</h1>
+    <button id="connectButton">Connect Wallet</button>
+    <div class="swap-box">
+      <h2>Swap Tokens</h2>
+      <label>From:</label>
+      <select id="tokenFrom"></select>
+      <input type="number" id="amountFrom" placeholder="Amount" />
+
+      <label>To:</label>
+      <select id="tokenTo"></select>
+      <input type="text" id="amountTo" disabled />
+
+      <div class="price-info">
+        <p id="priceInfo">Price: -</p>
+        <p id="usdValue">USD Value: -</p>
+      </div>
+
+      <button id="swapButton">Swap</button>
+      <p class="info">🎁 0.005 AMS gift for each swap!</p>
+    </div>
+  </div>
+
+  <script src="dex.js"></script>
+</body>
+</html>
