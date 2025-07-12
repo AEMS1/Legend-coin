@@ -10,30 +10,33 @@
   <header>
     <h1>AEMS DEX</h1>
     <button id="connectBtn">Connect Wallet</button>
+    <div id="walletAddress"></div>
   </header>
 
   <main>
     <div class="swap-box">
-      <label>From</label>
-      <select id="fromToken"></select>
-      <input type="number" id="fromAmount" placeholder="Enter amount" />
+      <div class="swap-section">
+        <label for="fromToken">From</label>
+        <select id="fromToken"></select>
+        <input type="number" id="fromAmount" placeholder="0.0" />
+      </div>
 
-      <label>To</label>
-      <select id="toToken"></select>
-      <input type="text" id="toAmount" disabled />
+      <div class="swap-section">
+        <label for="toToken">To</label>
+        <select id="toToken"></select>
+        <input type="text" id="toAmount" readonly />
+      </div>
 
-      <p id="priceInfo">1 = ... USDT</p>
-      <p id="receiveInfo">You will receive: ...</p>
-      <p id="feeInfo">1% fee to: 0xec5...683</p>
-
+      <div id="priceInfo"></div>
+      <div id="feeInfo"></div>
       <button id="swapBtn">Swap</button>
+      <p id="txStatus"></p>
     </div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
-  <script src="abi/pancakeRouterAbi.js"></script>
-  <script src="abi/erc20Abi.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
   <script src="tokenlist.js"></script>
+  <script src="abi.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
