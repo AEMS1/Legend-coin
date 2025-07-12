@@ -2,35 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AEMS DEX</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
+  <div class="container">
     <h1>AEMS DEX</h1>
     <button id="connectWallet">Connect Wallet</button>
-  </header>
-
-  <main>
+    
     <div class="swap-box">
       <label>From:</label>
       <select id="fromToken"></select>
-      <input type="number" id="fromAmount" placeholder="0.0" />
+      <input type="number" id="fromAmount" placeholder="Amount" />
 
       <label>To:</label>
       <select id="toToken"></select>
-      <input type="text" id="toAmount" placeholder="Estimated..." readonly />
+      <input type="text" id="toAmount" placeholder="Estimated Amount" readonly />
 
-      <p id="priceInfo">Price: --</p>
-      <button id="swapBtn">Swap</button>
-      <p id="statusMsg"></p>
+      <button id="swapButton">Swap</button>
     </div>
-  </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
+    <p id="priceInfo">Price: -</p>
+    <p id="statusMessage"></p>
+  </div>
+
+  <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
   <script src="tokens.js"></script>
-  <script src="abi.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
