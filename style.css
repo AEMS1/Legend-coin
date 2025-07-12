@@ -1,63 +1,48 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #0d0d0d;
-  color: #fff;
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #121212; color: #eee;
 }
-
-.container {
-  max-width: 400px;
+.app-container {
+  max-width: 900px;
   margin: auto;
-  padding: 2rem;
-  background-color: #1e1e1e;
-  border-radius: 10px;
-  margin-top: 3rem;
-  box-shadow: 0 0 10px #0ff;
+  padding: 20px;
 }
-
+header {
+  display: flex; justify-content: space-between; align-items: center;
+}
 h1 {
-  text-align: center;
-  color: #0ff;
+  margin: 0;
 }
-
-.swap-box {
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  margin-top: 1rem;
-  margin-bottom: 0.3rem;
-}
-
-select, input {
-  padding: 0.7rem;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-}
-
 button {
-  margin-top: 1.5rem;
-  padding: 0.8rem;
-  background-color: #0ff;
-  border: none;
-  color: #000;
-  font-weight: bold;
-  border-radius: 5px;
+  background: #00d084; border: none;
+  padding: 8px 16px; border-radius: 5px;
+  color: #fff;
   cursor: pointer;
-  transition: 0.3s;
 }
-
-button:hover {
-  background-color: #00cccc;
+main {
+  display: flex;
+  margin-top: 20px;
+  gap: 20px;
 }
-
-#statusMessage {
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: #ccc;
-  text-align: center;
+.swap-panel, .chart-panel {
+  background: #1e1e1e;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px #00ffe0;
+}
+.swap-panel { flex: 1; }
+.chart-panel { flex: 1; height: 400px; }
+.token-input {
+  margin-bottom: 20px;
+}
+select, input {
+  width: 100%; padding: 10px;
+  margin-top: 5px;
+  border: none; border-radius: 5px;
+  background: #2a2a2a; color: #fff;
+}
+#priceInfo, #status {
+  margin-top: 10px;
+  font-size: 0.95rem;
 }
