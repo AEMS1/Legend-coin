@@ -2,32 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AEMS DEX</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
-  <script src="tokens.js"></script>
 </head>
 <body>
-  <div class="container">
+  <header>
     <h1>AEMS DEX</h1>
-    <button id="connect">Connect Wallet</button>
-    <p id="account"></p>
+    <button id="connectWallet">Connect Wallet</button>
+  </header>
 
+  <main>
     <div class="swap-box">
+      <label>From:</label>
       <select id="fromToken"></select>
-      <input id="fromAmount" placeholder="Amount" />
+      <input type="number" id="fromAmount" placeholder="0.0" />
 
+      <label>To:</label>
       <select id="toToken"></select>
-      <input id="toAmount" placeholder="Estimated" disabled />
+      <input type="text" id="toAmount" placeholder="Estimated..." readonly />
 
-      <p id="priceUSD"></p>
-      <button id="swap">Swap Now</button>
-      <p class="note">Transaction fee: 1% goes to owner • 0.005 AMS gift</p>
-      <p id="status"></p>
+      <p id="priceInfo"></p>
+      <button id="swapBtn">Swap</button>
+      <p id="statusMsg"></p>
     </div>
-  </div>
+  </main>
+
   <script src="tokens.js"></script>
-  <script src="dex.js"></script>
+  <script src="abi.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
