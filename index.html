@@ -5,33 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AEMS DEX</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
   <script src="tokens.js"></script>
 </head>
 <body>
-  <div class="dex-container">
+  <div class="container">
     <h1>AEMS DEX</h1>
-    <button id="connectButton">Connect Wallet</button>
+    <button id="connect">Connect Wallet</button>
+    <p id="account"></p>
+
     <div class="swap-box">
-      <h2>Swap Tokens</h2>
-      <label>From:</label>
-      <select id="tokenFrom"></select>
-      <input type="number" id="amountFrom" placeholder="Amount" />
+      <select id="fromToken"></select>
+      <input id="fromAmount" placeholder="Amount" />
 
-      <label>To:</label>
-      <select id="tokenTo"></select>
-      <input type="text" id="amountTo" disabled />
+      <select id="toToken"></select>
+      <input id="toAmount" placeholder="Estimated" disabled />
 
-      <div class="price-info">
-        <p id="priceInfo">Price: -</p>
-        <p id="usdValue">USD Value: -</p>
-      </div>
-
-      <button id="swapButton">Swap</button>
-      <p class="info">🎁 0.005 AMS gift for each swap!</p>
+      <p id="priceUSD"></p>
+      <button id="swap">Swap Now</button>
+      <p class="note">Transaction fee: 1% goes to owner • 0.005 AMS gift</p>
+      <p id="status"></p>
     </div>
   </div>
-
   <script src="dex.js"></script>
 </body>
 </html>
