@@ -1,36 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AEMS DEX</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AEMS DEX - Swap</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div class="container">
-    <h1>AEMS DEX</h1>
-    <button id="connectWallet">🔌 Connect Wallet</button>
+  <div class="app-container">
+    <header>
+      <h1>AEMS DEX</h1>
+      <button id="connectBtn">Connect Wallet</button>
+    </header>
 
-    <div class="swap-box">
-      <div class="input-group">
-        <label>From</label>
-        <select id="fromToken"></select>
-        <input type="number" id="fromAmount" placeholder="Amount"/>
-      </div>
+    <main>
+      <section class="swap-panel">
+        <div class="token-input">
+          <label>From</label>
+          <select id="fromToken"></select>
+          <input type="number" id="fromAmount" placeholder="0.0"/>
+        </div>
+        <div class="token-input">
+          <label>To</label>
+          <select id="toToken"></select>
+          <input type="text" id="toAmount" placeholder="0.0" readonly/>
+        </div>
+        <button id="swapBtn">Swap</button>
+        <div id="status"></div>
+        <div id="priceInfo"></div>
+      </section>
 
-      <div class="input-group">
-        <label>To</label>
-        <select id="toToken"></select>
-        <input type="text" id="toAmount" readonly placeholder="Estimated Amount"/>
-      </div>
-
-      <button id="swapButton">🔁 Swap</button>
-      <p id="statusMessage"></p>
-      <p id="priceInfo">Live Price: -</p>
-    </div>
+      <section class="chart-panel">
+        <div id="chart"></div>
+      </section>
+    </main>
   </div>
 
+  <!-- Dependencies -->
   <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
+  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+  <!-- Project Files -->
   <script src="tokens.js"></script>
   <script src="script.js"></script>
 </body>
