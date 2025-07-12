@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AEMS DEX</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>AEMS DEX</h1>
+    <button id="connectBtn">Connect Wallet</button>
+  </header>
+
+  <main>
+    <div class="swap-box">
+      <label>From</label>
+      <select id="fromToken"></select>
+      <input type="number" id="fromAmount" placeholder="Enter amount" />
+
+      <label>To</label>
+      <select id="toToken"></select>
+      <input type="text" id="toAmount" disabled />
+
+      <p id="priceInfo">1 = ... USDT</p>
+      <p id="receiveInfo">You will receive: ...</p>
+      <p id="feeInfo">1% fee to: 0xec5...683</p>
+
+      <button id="swapBtn">Swap</button>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
+  <script src="abi/pancakeRouterAbi.js"></script>
+  <script src="abi/erc20Abi.js"></script>
+  <script src="tokenlist.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
