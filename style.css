@@ -1,6 +1,59 @@
-body { font-family: Arial, sans-serif; background: #111; color: #eee; text-align: center; padding: 20px; }
-.container { max-width:400px; margin:auto; }
-.swap-box select, .swap-box input, button { width:100%; padding:10px; margin:5px 0; border-radius:5px; border:none; }
-button { background:#3b82f6; color:white; font-weight:bold; cursor:pointer;}
-.note { font-size:12px; color:#999;}
-#status { margin-top:10px; min-height:20px;}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0e0e0e;
+  color: #fff;
+}
+
+header {
+  padding: 20px;
+  text-align: center;
+  background: #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+}
+
+button {
+  padding: 10px 20px;
+  background: #00d084;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.swap-box {
+  background: #1e1e1e;
+  padding: 30px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.swap-box input,
+.swap-box select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  background: #333;
+  border: none;
+  color: white;
+  border-radius: 4px;
+}
+
+#statusMsg {
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #ccc;
+}
