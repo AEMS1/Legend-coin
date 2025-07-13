@@ -1,34 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>AEMS DEX</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>My DEX Swap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
 </head>
 <body>
-  <div class="dex-container">
-    <h1>AEMS DEX</h1>
-    <button id="connectBtn">Connect Wallet</button>
+  <div class="container">
+    <h1>🔄 Swap Tokens</h1>
 
-    <div class="swap-box">
-      <div>
-        <label>From:</label>
-        <select id="fromToken"></select>
-        <input type="number" id="fromAmount" placeholder="0.0">
-      </div>
-      <div>
-        <label>To:</label>
-        <select id="toToken"></select>
-        <input type="text" id="toAmount" placeholder="0.0" readonly>
-      </div>
-      <button id="swapBtn">Swap</button>
-      <p id="status"></p>
+    <button id="connectButton" onclick="connectWallet()">🔌 Connect Wallet</button>
+    <p id="walletAddress" style="word-break: break-all;"></p>
+
+    <label for="fromToken">From Token:</label>
+    <select id="fromToken" disabled></select>
+
+    <label for="toToken">To Token:</label>
+    <select id="toToken" disabled></select>
+
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" placeholder="Enter amount" disabled />
+
+    <div class="info-box">
+      <p>💰 Estimated Price: <span id="priceInfo">-</span></p>
+      <p>📉 Minimum Received: <span id="minReceived">-</span></p>
+      <p>⚠️ Slippage: <span id="slippage">1%</span></p>
     </div>
+
+    <div class="actions">
+      <button onclick="swapTokens()" disabled id="swapButton">Swap Now</button>
+      <button onclick="reverseTokens()" disabled id="reverseButton">🔁 Reverse</button>
+    </div>
+
+    <p id="status"></p>
   </div>
 
-  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
   <script src="tokens.js"></script>
-  <script src="script.js"></script>
+  <script src="abi.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
