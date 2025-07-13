@@ -1,8 +1,9 @@
 const tokens = [
    {
-    symbol: "BNB",
-    address: "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c" // WBNB
-  }
+    symbol: "bnb",
+    address: "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+    decimals: 18
+  },
   {
     name: "reef",
     address: "0xF21768cCBC73Ea5B6fd3C687208a7c2def2d966e",
@@ -16,3 +17,4 @@ const tokens = [
     decimals: 18
   }
 ];
+0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
