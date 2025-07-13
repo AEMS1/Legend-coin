@@ -4,59 +4,12 @@
   <meta charset="UTF-8">
   <title>Legend Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      background-color: #0d1117;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-
-    h1 {
-      color: #58a6ff;
-    }
-
-    select, input, button {
-      padding: 10px;
-      margin: 8px;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-    }
-
-    select, input {
-      width: 200px;
-    }
-
-    button {
-      background-color: #238636;
-      color: white;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background-color: #2ea043;
-    }
-
-    #status {
-      margin-top: 20px;
-      font-weight: bold;
-      color: #f0f6fc;
-    }
-
-    #walletAddress {
-      color: #ffa657;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>💱 Legend Swap</h1>
-
   <p>کیف پول: <span id="walletAddress">Not Connected</span></p>
   <button id="connectButton" onclick="connectWallet()">اتصال کیف پول</button>
-
   <div>
     <select id="fromToken"></select>
     <br>
@@ -66,14 +19,9 @@
     <br>
     <button id="reverseButton" onclick="reverseTokens()">🔁 جابجایی</button>
   </div>
-
   <div id="priceInfo" style="margin-top: 15px; font-size: 18px;">-</div>
-
   <button id="swapButton" onclick="swapTokens()">🔄 سواپ</button>
-
   <div id="status"></div>
-
-  <!-- فایل‌های اسکریپت -->
   <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
   <script src="abi.js"></script>
   <script src="tokens.js"></script>
