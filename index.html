@@ -1,44 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>My DEX Swap</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Legend Swap</title>
   <script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
+  <script src="abi.js"></script>
+  <script src="tokens.js"></script>
+  <script src="main.js" defer></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🔄 Swap Tokens</h1>
+  <h1>Legend Swap</h1>
+  <button id="connectButton" onclick="connectWallet()">🔌 Connect Wallet</button>
+  <p>👛 Wallet: <span id="walletAddress">-</span></p>
 
-    <button id="connectButton" onclick="connectWallet()">🔌 Connect Wallet</button>
-    <p id="walletAddress" style="word-break: break-all;"></p>
+  <label>From:</label>
+  <select id="fromToken"></select>
+  <label>To:</label>
+  <select id="toToken"></select>
+  <button id="reverseButton" onclick="reverseTokens()">🔁</button>
 
-    <label for="fromToken">From Token:</label>
-    <select id="fromToken" disabled></select>
+  <input type="number" id="amount" placeholder="Amount">
+  <button id="swapButton" onclick="swapTokens()">🔄 Swap</button>
 
-    <label for="toToken">To Token:</label>
-    <select id="toToken" disabled></select>
-
-    <label for="amount">Amount:</label>
-    <input type="number" id="amount" placeholder="Enter amount" disabled />
-
-    <div class="info-box">
-     <p>💱 قیمت نهایی دریافت‌شده: <span id="priceInfo">-</span></p>
-     <p>💵 ارزش دلاری تقریبی: <span id="priceUSD">-</span></p>
-     <p>📢 وضعیت: <span id="status">-</span></p>
-    </div>
-
-    <div class="actions">
-      <button onclick="swapTokens()" disabled id="swapButton">Swap Now</button>
-      <button onclick="reverseTokens()" disabled id="reverseButton">🔁 Reverse</button>
-    </div>
-
-    <p id="status"></p>
-  </div>
-
-  <script src="tokens.js"></script>
-  <script src="abi.js"></script>
-  <script src="main.js"></script>
+  <p>💱 Estimated Output: <span id="priceInfo">-</span></p>
+  <p>💵 USD Value: <span id="priceUSD">-</span></p>
+  <p>📢 Status: <span id="status">-</span></p>
 </body>
 </html>
