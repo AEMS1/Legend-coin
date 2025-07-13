@@ -6,9 +6,9 @@ const tokens = [
     decimals: 18
   },
   {
-    name: "LGD",
-    address: "0x4751C0DE56EFB3770615097347cbF131D302498A",
-    symbol: "LGD",
+    name: "reef",
+    address: "0xF21768cCBC73Ea5B6fd3C687208a7c2def2d966e",
+    symbol: "reef",
     decimals: 18
   },
   {
