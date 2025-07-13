@@ -2,17 +2,15 @@ let web3;
 let router;
 let userAddress = null;
 
-const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683"; // مالک
+const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683"; // مالک صرافی
 const routerAddress = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
 const WBNB = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
-
 const FEE_PERCENT = 0.006;
 
 window.addEventListener("load", () => disableUI(true));
 
 async function connectWallet() {
-  if (!window.ethereum) return alert("لطفاً متامسک نصب کنید.");
-
+  if (!window.ethereum) return alert("لطفاً کیف پول متامسک را نصب کنید.");
   try {
     await window.ethereum.request({ method: "eth_requestAccounts" });
     web3 = new Web3(window.ethereum);
@@ -30,10 +28,9 @@ async function connectWallet() {
     ["fromToken", "toToken", "amount"].forEach(id =>
       document.getElementById(id).addEventListener("input", updatePriceInfo)
     );
-
   } catch (err) {
     console.error(err);
-    alert("اتصال به کیف پول لغو شد.");
+    alert("خطا در اتصال به کیف پول.");
   }
 }
 
@@ -57,11 +54,6 @@ function fillTokenOptions() {
   });
 }
 
-function getTokenDecimals(address) {
-  const token = tokens.find(t => t.address.toLowerCase() === address.toLowerCase());
-  return token ? token.decimals : 18;
-}
-
 function getTokenSymbol(address) {
   const token = tokens.find(t => t.address.toLowerCase() === address.toLowerCase());
   return token ? token.symbol : "";
@@ -69,11 +61,13 @@ function getTokenSymbol(address) {
 
 async function fetchTokenPriceUSD(address) {
   try {
-    const res = await fetch(`https://api.coingecko.com/api/v3/simple/token_price/binance-smart-chain?contract_addresses=${address}&vs_currencies=usd`);
+    const res = await fetch(
+      `https://api.coingecko.com/api/v3/simple/token_price/binance-smart-chain?contract_addresses=${address}&vs_currencies=usd`
+    );
     const data = await res.json();
     return data[address.toLowerCase()]?.usd || null;
   } catch (e) {
-    console.warn("خطا در دریافت قیمت از CoinGecko:", e);
+    console.warn("CoinGecko error:", e);
     return null;
   }
 }
@@ -97,7 +91,6 @@ async function updatePriceInfo() {
     const formatted = web3.utils.fromWei(output.toString(), "ether");
     document.getElementById("priceInfo").innerText = `${parseFloat(formatted).toFixed(6)} ${symbol}`;
 
-    // قیمت USD
     const price = await fetchTokenPriceUSD(to);
     if (price) {
       const usdValue = parseFloat(formatted) * price;
@@ -105,7 +98,6 @@ async function updatePriceInfo() {
     } else {
       document.getElementById("priceUSD").innerText = "-";
     }
-
   } catch (err) {
     console.warn("خطا در محاسبه قیمت", err);
     document.getElementById("priceInfo").innerText = "Error";
@@ -123,7 +115,7 @@ function reverseTokens() {
 }
 
 async function swapTokens() {
-  if (!userAddress) return alert("اول کیف پولت رو وصل کن.");
+  if (!userAddress) return alert("لطفاً کیف پول را وصل کنید.");
 
   const from = document.getElementById("fromToken").value;
   const to = document.getElementById("toToken").value;
@@ -134,19 +126,19 @@ async function swapTokens() {
   const fromPriceUSD = await fetchTokenPriceUSD(from);
   const bnbPriceUSD = await fetchTokenPriceUSD(WBNB);
 
-  if (!fromPriceUSD || !bnbPriceUSD) return alert("❌ قیمت‌ها دریافت نشدند. دوباره تلاش کنید.");
+  if (!fromPriceUSD || !bnbPriceUSD) return alert("❌ قیمت توکن‌ها دریافت نشد.");
 
   const usdValue = amount * fromPriceUSD;
   const feeInUSD = usdValue * FEE_PERCENT;
   const feeInBNB = feeInUSD / bnbPriceUSD;
-  const feeBNBWei = web3.utils.toWei(feeInBNB.toString(), "ether");
+  const feeInBNBFixed = feeInBNB.toFixed(18);
+  const feeBNBWei = web3.utils.toWei(feeInBNBFixed, "ether");
 
   const deadline = Math.floor(Date.now() / 1000) + 600;
 
   document.getElementById("status").innerText = "💰 در حال پرداخت کارمزد...";
 
   try {
-    // ارسال کارمزد BNB
     await web3.eth.sendTransaction({
       from: userAddress,
       to: owner,
