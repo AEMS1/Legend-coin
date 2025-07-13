@@ -2,7 +2,7 @@ let web3, router, userAddress = null;
 
 const routerAddress = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // PancakeSwap Router V2
 const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683";       // کیف پول مالک
-const FIXED_FEE_BNB = 0.001; // قابل تغییر
+const FIXED_FEE_BNB = 0.00008; // قابل تغییر
 const WBNB = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";         // WBNB آدرس
 
 window.addEventListener("load", () => disableUI(true));
