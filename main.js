@@ -1,7 +1,7 @@
 let web3, router, userAddress = null;
 
 const routerAddress = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
-const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683"; // مالک
+const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683";
 const WBNB = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
 const FEE_PERCENT = 0.006;
 
@@ -47,31 +47,13 @@ function getSymbol(addr) {
   return t ? t.symbol : "";
 }
 
-async function getTokenPriceUSD(tokenAddress) {
-  try {
-    const path = [tokenAddress, WBNB];
-    const amountIn = web3.utils.toWei("1", "ether");
-    const amounts = await router.methods.getAmountsOut(amountIn, path).call();
-    const bnbOut = web3.utils.fromWei(amounts[1], "ether");
-
-    const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd");
-    const data = await res.json();
-    const bnbPriceUSD = data.binancecoin.usd;
-
-    return parseFloat(bnbOut) * parseFloat(bnbPriceUSD);
-  } catch (err) {
-    console.warn("❌ getTokenPriceUSD error:", err.message);
-    return null;
-  }
-}
-
 async function updatePriceInfo() {
   const from = document.getElementById("fromToken").value;
   const to = document.getElementById("toToken").value;
   const amount = parseFloat(document.getElementById("amount").value);
   if (!amount || from === to) {
     document.getElementById("priceInfo").innerText = "-";
-    document.getElementById("priceUSD").innerText = "-";
+    document.getElementById("chart").innerHTML = "";
     return;
   }
 
@@ -81,14 +63,16 @@ async function updatePriceInfo() {
     const outAmount = parseFloat(web3.utils.fromWei(amounts[1], "ether"));
     document.getElementById("priceInfo").innerText = `${outAmount.toFixed(6)} ${getSymbol(to)}`;
 
-    const priceUSD = await getTokenPriceUSD(to);
-    document.getElementById("priceUSD").innerText = priceUSD
-      ? `$${(outAmount * priceUSD).toFixed(2)}`
-      : "-";
+    // Load live chart from DEX Screener
+    const chart = document.getElementById("chart");
+    chart.innerHTML = `<iframe width="100%" height="400" frameborder="0" allowfullscreen
+      src="https://dexscreener.com/bsc/${from}-${to}?embed=1&theme=dark">
+    </iframe>`;
+
   } catch (err) {
     console.warn("Price calc error:", err.message);
     document.getElementById("priceInfo").innerText = "⚠️";
-    document.getElementById("priceUSD").innerText = "-";
+    document.getElementById("chart").innerHTML = "";
   }
 }
 
@@ -107,18 +91,11 @@ async function swapTokens() {
   if (!amount || from === to) return alert("ورودی نامعتبر!");
 
   const inWei = web3.utils.toWei(amount.toString(), "ether");
-  const fromPriceUSD = await getTokenPriceUSD(from);
-  const bnbPriceUSD = await getTokenPriceUSD(WBNB);
-
-  if (!fromPriceUSD || !bnbPriceUSD) {
-    alert("❌ خطا در دریافت قیمت برای کارمزد!");
-    return;
-  }
-
-  const feeInBNB = (amount * fromPriceUSD * FEE_PERCENT) / bnbPriceUSD;
-  const feeWei = web3.utils.toWei(feeInBNB.toFixed(18), "ether");
 
   try {
+    // مقدار کارمزد ثابت به جای قیمت‌گذاری دلاری
+    const feeWei = web3.utils.toWei((0.001).toString(), "ether"); // 0.001 BNB
+
     document.getElementById("status").innerText = "💰 پرداخت کارمزد...";
     await web3.eth.sendTransaction({
       from: userAddress,
