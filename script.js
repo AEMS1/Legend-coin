@@ -1,29 +1,22 @@
-const routerAddress = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
+const routerAddress = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // PancakeSwap Router
 const ownerWallet = "0xec54951C7d4619256Ea01C811fFdFa01A9925683";
 let provider, signer;
 
-window.onload = () => {
+window.onload = async () => {
   provider = new ethers.providers.Web3Provider(window.ethereum);
-  populateTokens();
-  setupChart();
+  signer = provider.getSigner();
+  initTokens();
   document.getElementById("connectBtn").onclick = connectWallet;
-  document.getElementById("swapBtn").onclick = executeSwap;
-  document.getElementById("fromAmount").oninput = estimateOut;
-  document.getElementById("fromToken").onchange = estimateOut;
-  document.getElementById("toToken").onchange = estimateOut;
+  document.getElementById("swapBtn").onclick = swap;
 };
 
 async function connectWallet() {
-  try {
-    const [acc] = await provider.send("eth_requestAccounts", []);
-    signer = provider.getSigner();
-    document.getElementById("connectBtn").innerText = acc.slice(0,6)+"..."+acc.slice(-4);
-  } catch {
-    alert("Connection failed");
-  }
+  await provider.send("eth_requestAccounts", []);
+  const address = await signer.getAddress();
+  document.getElementById("connectBtn").innerText = "✅ " + address.slice(0, 6) + "..." + address.slice(-4);
 }
 
-function populateTokens() {
+function initTokens() {
   const from = document.getElementById("fromToken");
   const to = document.getElementById("toToken");
   tokenList.forEach(t => {
@@ -33,61 +26,38 @@ function populateTokens() {
   to.selectedIndex = 1;
 }
 
-async function estimateOut() {
-  const amt = document.getElementById("fromAmount").value;
-  const from = document.getElementById("fromToken").value;
-  const to = document.getElementById("toToken").value;
-  if (!amt || !from || !to) return;
-  const router = new ethers.Contract(routerAddress, ["function getAmountsOut(uint, address[]) view returns(uint[])"], provider);
-  const path = [from, to];
-  const aIn = ethers.utils.parseUnits(amt,18);
-  try {
-    const res = await router.getAmountsOut(aIn, path);
-    const out = ethers.utils.formatUnits(res[1],18);
-    document.getElementById("toAmount").value = out;
-    document.getElementById("priceInfo").innerText = `1 ${tokenList.find(t=>t.address===from).symbol} ≈ ${(res[1]/aIn).toFixed(6)} ${tokenList.find(t=>t.address===to).symbol}`;
-    updateChart(from,to);
-  } catch {
-    document.getElementById("priceInfo").innerText = `Unable to fetch`;
-  }
-}
+async function swap() {
+  const fromToken = document.getElementById("fromToken").value;
+  const toToken = document.getElementById("toToken").value;
+  const amount = document.getElementById("fromAmount").value;
 
-async function executeSwap() {
-  if (!signer) return alert("Connect wallet first");
-  const from = document.getElementById("fromToken").value;
-  const to = document.getElementById("toToken").value;
-  const amt = document.getElementById("fromAmount").value;
-  const aIn = ethers.utils.parseUnits(amt,18);
-  const path = [from,to];
-  const fee = aIn.mul(7).div(1000);
-  const net = aIn.sub(fee);
+  const inputAmount = ethers.utils.parseUnits(amount, 18);
+  const fee = inputAmount.mul(1).div(100); // 1%
+  const amountAfterFee = inputAmount.sub(fee);
 
-  const token = new ethers.Contract(from, ["function approve(address,uint256)","function transfer(address,uint256)"], signer);
-  const router = new ethers.Contract(routerAddress, ["function swapExactTokensForTokensSupportingFeeOnTransferTokens(uint,uint,address[],address,uint)"], signer);
+  const router = new ethers.Contract(routerAddress, [
+    "function swapExactTokensForTokensSupportingFeeOnTransferTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external"
+  ], signer);
+
+  const token = new ethers.Contract(fromToken, [
+    "function approve(address spender, uint256 amount) external returns (bool)",
+    "function transfer(address to, uint256 amount) external returns (bool)"
+  ], signer);
 
   try {
-    await token.approve(routerAddress, aIn);
-    await token.transfer(ownerWallet, fee);
-    await router.swapExactTokensForTokensSupportingFeeOnTransferTokens(net,0,path,await signer.getAddress(),Date.now()+600);
-    document.getElementById("status").innerText = "✅ Swap completed!";
-  } catch (e) {
-    console.error(e);
-    document.getElementById("status").innerText = "❌ Swap failed.";
+    await token.approve(routerAddress, inputAmount);
+    await token.transfer(ownerWallet, fee); // send fee to owner
+    const tx = await router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+      amountAfterFee,
+      0,
+      [fromToken, toToken],
+      await signer.getAddress(),
+      Math.floor(Date.now() / 1000) + 60 * 10
+    );
+    await tx.wait();
+    document.getElementById("status").innerText = "✅ Swap successful!";
+  } catch (err) {
+    console.error(err);
+    document.getElementById("status").innerText = "❌ Swap failed";
   }
-}
-
-// 🕒 CHART
-let chart;
-function setupChart(){
-  const cont = document.getElementById("chart");
-  chart = LightweightCharts.createChart(cont,{layout:{backgroundColor:'#1e1e1e',textColor:'#ddd'},grid:{vertLines:{color:'#373737'},horzLines:{color:'#373737'}},timeScale:{borderColor:'#555'}});
-  chart.addCandlestickSeries({upColor:'#00ff9f',downColor:'#ff4b5c'});
-}
-
-async function updateChart(from,to) {
-  // Example: fetch dummy data. Replace API endpoints as needed.
-  const data = await fetch(`https://api.pancakeswap.info/api/v2/tokens/${to}`).then(r=>r.json());
-  // Use dummy OHLC because Pancake doesn't provide candlestick via this endpoint.
-  chart.applyOptions({timeScale:{timeVisible:true}});
-  chart.series.setData([]);
 }
