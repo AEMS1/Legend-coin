@@ -1,19 +1,14 @@
 const tokens = [
-   {
+  {
     symbol: "BNB",
-    address: "bnb"
+    address: "bnb" // فقط همین مقدار برای تشخیص Native
   },
   {
-    name: "reef",
-    address: "0xF21768cCBC73Ea5B6fd3C687208a7c2def2d966e",
-    symbol: "reef",
-    decimals: 18
-  },
-  {
-    name: "USDT",
-    address: "0x55d398326f99059fF775485246999027B3197955",
     symbol: "USDT",
-    decimals: 18
+    address: "0x55d398326f99059ff775485246999027b3197955"
+  },
+  {
+    symbol: "LGD",
+    address: "0x4751C0DE56EFB3770615097347cbF131D302498A"
   }
 ];
-0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
