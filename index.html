@@ -1,42 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
   <meta charset="UTF-8">
   <title>Legend Swap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
-  <script src="abi.js"></script>
-  <script src="tokens.js"></script>
-  <script src="main.js" defer></script>
-  <script src="https://s3.tradingview.com/tv.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #58a6ff;
+    }
+
+    select, input, button {
+      padding: 10px;
+      margin: 8px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+    }
+
+    select, input {
+      width: 200px;
+    }
+
+    button {
+      background-color: #238636;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #2ea043;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #f0f6fc;
+    }
+
+    #walletAddress {
+      color: #ffa657;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Legend Swap</h1>
-    <button id="connectButton" onclick="connectWallet()">🔌 Connect Wallet</button>
-    <p>👛 Wallet: <span id="walletAddress">-</span></p>
+  <h1>💱 Legend Swap</h1>
 
-    <div class="swap-box">
-      <label>From:</label>
-      <select id="fromToken"></select>
+  <p>کیف پول: <span id="walletAddress">Not Connected</span></p>
+  <button id="connectButton" onclick="connectWallet()">اتصال کیف پول</button>
 
-      <label>To:</label>
-      <select id="toToken"></select>
-
-      <button id="reverseButton" onclick="reverseTokens()">🔁 Swap</button>
-
-      <input type="number" id="amount" placeholder="Amount">
-
-      <button id="swapButton" onclick="swapTokens()">🔄 Swap Now</button>
-
-      <div class="price-info">
-        <p>💱 Estimated Output: <span id="priceInfo">-</span></p>
-        <p>📢 Status: <span id="status">-</span></p>
-      </div>
-
-    <div id="chart" style="height:400px;"></div>
-    </div>
+  <div>
+    <select id="fromToken"></select>
+    <br>
+    <select id="toToken"></select>
+    <br>
+    <input type="number" id="amount" placeholder="مقدار" />
+    <br>
+    <button id="reverseButton" onclick="reverseTokens()">🔁 جابجایی</button>
   </div>
+
+  <div id="priceInfo" style="margin-top: 15px; font-size: 18px;">-</div>
+
+  <button id="swapButton" onclick="swapTokens()">🔄 سواپ</button>
+
+  <div id="status"></div>
+
+  <!-- فایل‌های اسکریپت -->
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+  <script src="abi.js"></script>
+  <script src="tokens.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
