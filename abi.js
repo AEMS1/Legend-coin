@@ -1,63 +1,30 @@
 const pancakeRouterABI = [
   {
-    "name": "getAmountsOut",
-    "type": "function",
-    "stateMutability": "view",
     "inputs": [
-      { "name": "amountIn", "type": "uint256" },
-      { "name": "path", "type": "address[]" }
+      { "internalType": "uint256", "name": "amountIn", "type": "uint256" },
+      { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" },
+      { "internalType": "address[]", "name": "path", "type": "address[]" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "deadline", "type": "uint256" }
     ],
-    "outputs": [
-      { "name": "amounts", "type": "uint256[]" }
-    ]
-  },
-  {
     "name": "swapExactTokensForTokens",
-    "type": "function",
+    "outputs": [{ "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" }],
     "stateMutability": "nonpayable",
-    "inputs": [
-      { "name": "amountIn", "type": "uint256" },
-      { "name": "amountOutMin", "type": "uint256" },
-      { "name": "path", "type": "address[]" },
-      { "name": "to", "type": "address" },
-      { "name": "deadline", "type": "uint256" }
-    ],
-    "outputs": [
-      { "name": "amounts", "type": "uint256[]" }
-    ]
+    "type": "function"
   },
   {
-    "name": "swapExactETHForTokens",
-    "type": "function",
-    "stateMutability": "payable",
     "inputs": [
-      { "name": "amountOutMin", "type": "uint256" },
-      { "name": "path", "type": "address[]" },
-      { "name": "to", "type": "address" },
-      { "name": "deadline", "type": "uint256" }
+      { "internalType": "uint256", "name": "amountIn", "type": "uint256" },
+      { "internalType": "address[]", "name": "path", "type": "address[]" }
     ],
-    "outputs": [
-      { "name": "amounts", "type": "uint256[]" }
-    ]
-  },
-  {
-    "name": "swapExactTokensForETH",
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      { "name": "amountIn", "type": "uint256" },
-      { "name": "amountOutMin", "type": "uint256" },
-      { "name": "path", "type": "address[]" },
-      { "name": "to", "type": "address" },
-      { "name": "deadline", "type": "uint256" }
-    ],
-    "outputs": [
-      { "name": "amounts", "type": "uint256[]" }
-    ]
+    "name": "getAmountsOut",
+    "outputs": [{ "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" }],
+    "stateMutability": "view",
+    "type": "function"
   }
 ];
+
 const erc20ABI = [
-  // فقط متد approve برای کار ما کافیه
   {
     "constant": false,
     "inputs": [
