@@ -5,7 +5,7 @@ const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683"; // مالک
 const WBNB = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
 
 // 🔧 کارمزد ثابت قابل ویرایش (بر حسب BNB)
-const FIXED_FEE_BNB = 0.001;
+const FIXED_FEE_BNB = 0.00008;
 
 window.addEventListener("load", () => disableUI(true));
 
