@@ -1,48 +1,33 @@
 body {
-  margin: 0; padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #121212; color: #eee;
-}
-.app-container {
-  max-width: 900px;
-  margin: auto;
-  padding: 20px;
-}
-header {
-  display: flex; justify-content: space-between; align-items: center;
-}
-h1 {
-  margin: 0;
-}
-button {
-  background: #00d084; border: none;
-  padding: 8px 16px; border-radius: 5px;
+  background: #1a1a1a;
   color: #fff;
-  cursor: pointer;
-}
-main {
-  display: flex;
-  margin-top: 20px;
-  gap: 20px;
-}
-.swap-panel, .chart-panel {
-  background: #1e1e1e;
-  border-radius: 8px;
+  font-family: Arial, sans-serif;
   padding: 20px;
-  box-shadow: 0 0 10px #00ffe0;
 }
-.swap-panel { flex: 1; }
-.chart-panel { flex: 1; height: 400px; }
-.token-input {
-  margin-bottom: 20px;
+.dex-container {
+  max-width: 500px;
+  margin: auto;
+  background: #2c2c2c;
+  padding: 20px;
+  border-radius: 10px;
+}
+.swap-box {
+  margin-top: 20px;
 }
 select, input {
-  width: 100%; padding: 10px;
+  width: 100%;
+  padding: 10px;
   margin-top: 5px;
-  border: none; border-radius: 5px;
-  background: #2a2a2a; color: #fff;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 5px;
 }
-#priceInfo, #status {
-  margin-top: 10px;
-  font-size: 0.95rem;
+button {
+  width: 100%;
+  padding: 12px;
+  background: #00b894;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
