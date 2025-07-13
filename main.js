@@ -1,14 +1,16 @@
 let web3, router, userAddress = null;
 
-const routerAddress = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // PancakeSwap Router v2
-const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683";       // کیف پول مالک
+const routerAddress = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // PancakeSwap
+const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683"; // مالک
 const WBNB = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
-const FEE_PERCENT = 0.006; // 0.6٪
+
+// 🔧 کارمزد ثابت قابل ویرایش (بر حسب BNB)
+const FIXED_FEE_BNB = 0.001;
 
 window.addEventListener("load", () => disableUI(true));
 
 async function connectWallet() {
-  if (!window.ethereum) return alert("لطفاً Metamask نصب کنید!");
+  if (!window.ethereum) return alert("Metamask نصب نیست.");
   await window.ethereum.request({ method: "eth_requestAccounts" });
   web3 = new Web3(window.ethereum);
   const accounts = await web3.eth.getAccounts();
@@ -55,13 +57,22 @@ async function updatePriceInfo() {
   }
 
   try {
+    const path = getSwapPath(from, to);
     const inWei = web3.utils.toWei(amount.toString(), "ether");
-    const amounts = await router.methods.getAmountsOut(inWei, [from, to]).call();
-    const outAmount = parseFloat(web3.utils.fromWei(amounts[1], "ether"));
+    const amounts = await router.methods.getAmountsOut(inWei, path).call();
+    const outAmount = parseFloat(web3.utils.fromWei(amounts[amounts.length - 1], "ether"));
     document.getElementById("priceInfo").innerText = `${outAmount.toFixed(6)} ${getSymbol(to)}`;
   } catch (err) {
-    console.warn("خطا در محاسبه خروجی:", err.message);
-    document.getElementById("priceInfo").innerText = "⚠️";
+    console.warn("⚠️ خطا در تخمین:", err.message);
+    document.getElementById("priceInfo").innerText = "❌";
+  }
+}
+
+function getSwapPath(from, to) {
+  if (from === WBNB || to === WBNB) {
+    return [from, to];
+  } else {
+    return [from, WBNB, to]; // مسیر از طریق BNB
   }
 }
 
@@ -73,44 +84,45 @@ function reverseTokens() {
 }
 
 async function swapTokens() {
-  if (!userAddress) return alert("کیف پول وصل نیست.");
+  if (!userAddress) return alert("کیف پول متصل نیست.");
+
   const from = document.getElementById("fromToken").value;
   const to = document.getElementById("toToken").value;
   const amount = parseFloat(document.getElementById("amount").value);
   if (!amount || from === to) return alert("ورودی نامعتبر است.");
 
+  const path = getSwapPath(from, to);
+  const inWei = web3.utils.toWei(amount.toString(), "ether");
+  const feeWei = web3.utils.toWei(FIXED_FEE_BNB.toString(), "ether");
+
   try {
-    const inWei = web3.utils.toWei(amount.toString(), "ether");
-
-    // دریافت مقدار خروجی برای محاسبه دقیق
-    const amounts = await router.methods.getAmountsOut(inWei, [from, to]).call();
-    const outAmount = amounts[1];
-
-    // محاسبه مقدار کارمزد به BNB (فرضاً معادل 0.6٪ ورودی)
-    const feeInBNB = 0.001; // مقدار ثابت یا می‌تونی دقیق محاسبه کنی
-    const feeWei = web3.utils.toWei(feeInBNB.toString(), "ether");
-
     document.getElementById("status").innerText = "💰 پرداخت کارمزد...";
+
     await web3.eth.sendTransaction({
       from: userAddress,
       to: owner,
       value: feeWei
     });
 
-    document.getElementById("status").innerText = "⏳ تأیید توکن...";
-    const token = new web3.eth.Contract(erc20ABI, from);
-    await token.methods.approve(routerAddress, inWei).send({ from: userAddress });
+    document.getElementById("status").innerText = "✅ کارمزد پرداخت شد";
+
+    if (from !== WBNB) {
+      const token = new web3.eth.Contract(erc20ABI, from);
+      document.getElementById("status").innerText = "🔒 تایید توکن...";
+      await token.methods.approve(routerAddress, inWei).send({ from: userAddress });
+    }
 
     document.getElementById("status").innerText = "🔁 در حال سواپ...";
+
     await router.methods.swapExactTokensForTokens(
       inWei,
       0,
-      [from, to],
+      path,
       userAddress,
-      Math.floor(Date.now() / 1000) + 60 * 10
+      Math.floor(Date.now() / 1000) + 600
     ).send({ from: userAddress });
 
-    document.getElementById("status").innerText = "✅ سواپ با موفقیت انجام شد!";
+    document.getElementById("status").innerText = "✅ سواپ موفق!";
   } catch (err) {
     console.error("Swap error:", err);
     document.getElementById("status").innerText = "❌ خطا در سواپ!";
