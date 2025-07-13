@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Legend Swap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
   <script src="abi.js"></script>
   <script src="tokens.js"></script>
@@ -10,21 +11,30 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Legend Swap</h1>
-  <button id="connectButton" onclick="connectWallet()">🔌 Connect Wallet</button>
-  <p>👛 Wallet: <span id="walletAddress">-</span></p>
+  <div class="container">
+    <h1>Legend Swap</h1>
+    <button id="connectButton" onclick="connectWallet()">🔌 Connect Wallet</button>
+    <p>👛 Wallet: <span id="walletAddress">-</span></p>
 
-  <label>From:</label>
-  <select id="fromToken"></select>
-  <label>To:</label>
-  <select id="toToken"></select>
-  <button id="reverseButton" onclick="reverseTokens()">🔁</button>
+    <div class="swap-box">
+      <label>From:</label>
+      <select id="fromToken"></select>
 
-  <input type="number" id="amount" placeholder="Amount">
-  <button id="swapButton" onclick="swapTokens()">🔄 Swap</button>
+      <label>To:</label>
+      <select id="toToken"></select>
 
-  <p>💱 Estimated Output: <span id="priceInfo">-</span></p>
-  <p>💵 USD Value: <span id="priceUSD">-</span></p>
-  <p>📢 Status: <span id="status">-</span></p>
+      <button id="reverseButton" onclick="reverseTokens()">🔁 Swap</button>
+
+      <input type="number" id="amount" placeholder="Amount">
+
+      <button id="swapButton" onclick="swapTokens()">🔄 Swap Now</button>
+
+      <div class="price-info">
+        <p>💱 Estimated Output: <span id="priceInfo">-</span></p>
+        <p>💵 USD Value: <span id="priceUSD">-</span></p>
+        <p>📢 Status: <span id="status">-</span></p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
