@@ -1,46 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>AEMS DEX - Swap</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <title>AEMS DEX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-container">
-    <header>
-      <h1>AEMS DEX</h1>
-      <button id="connectBtn">Connect Wallet</button>
-    </header>
+  <div class="dex-container">
+    <h1>AEMS DEX</h1>
+    <button id="connectBtn">Connect Wallet</button>
 
-    <main>
-      <section class="swap-panel">
-        <div class="token-input">
-          <label>From</label>
-          <select id="fromToken"></select>
-          <input type="number" id="fromAmount" placeholder="0.0"/>
-        </div>
-        <div class="token-input">
-          <label>To</label>
-          <select id="toToken"></select>
-          <input type="text" id="toAmount" placeholder="0.0" readonly/>
-        </div>
-        <button id="swapBtn">Swap</button>
-        <div id="status"></div>
-        <div id="priceInfo"></div>
-      </section>
-
-      <section class="chart-panel">
-        <div id="chart"></div>
-      </section>
-    </main>
+    <div class="swap-box">
+      <div>
+        <label>From:</label>
+        <select id="fromToken"></select>
+        <input type="number" id="fromAmount" placeholder="0.0">
+      </div>
+      <div>
+        <label>To:</label>
+        <select id="toToken"></select>
+        <input type="text" id="toAmount" placeholder="0.0" readonly>
+      </div>
+      <button id="swapBtn">Swap</button>
+      <p id="status"></p>
+    </div>
   </div>
 
-  <!-- Dependencies -->
-  <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
-  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-
-  <!-- Project Files -->
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
   <script src="tokens.js"></script>
   <script src="script.js"></script>
 </body>
