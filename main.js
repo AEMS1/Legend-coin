@@ -1,16 +1,16 @@
 let web3, router, userAddress = null;
 
 const routerAddress = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // PancakeSwap
-const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683"; // مالک
-const WBNB = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
+const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683";       // کیف پول مالک
+const WBNB = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";         // آدرس WBNB
 
-// 🔧 کارمزد ثابت قابل ویرایش (بر حسب BNB)
-const FIXED_FEE_BNB = 0.00008;
+// 💰 کارمزد ثابت (BNB) که می‌خواهی بگیری (قابل ویرایش)
+const FIXED_FEE_BNB = 0.001;
 
 window.addEventListener("load", () => disableUI(true));
 
 async function connectWallet() {
-  if (!window.ethereum) return alert("Metamask نصب نیست.");
+  if (!window.ethereum) return alert("لطفاً Metamask نصب کنید.");
   await window.ethereum.request({ method: "eth_requestAccounts" });
   web3 = new Web3(window.ethereum);
   const accounts = await web3.eth.getAccounts();
@@ -18,7 +18,7 @@ async function connectWallet() {
   router = new web3.eth.Contract(pancakeRouterABI, routerAddress);
 
   document.getElementById("walletAddress").innerText = userAddress;
-  document.getElementById("connectButton").innerText = "🔌 Connected";
+  document.getElementById("connectButton").innerText = "🔌 متصل شد";
 
   fillTokenOptions();
   disableUI(false);
@@ -47,6 +47,17 @@ function getSymbol(addr) {
   return t ? t.symbol : "";
 }
 
+function getSwapPath(from, to) {
+  const wrappedFrom = from.toLowerCase() === "bnb" ? WBNB : from;
+  const wrappedTo = to.toLowerCase() === "bnb" ? WBNB : to;
+
+  if (wrappedFrom === WBNB || wrappedTo === WBNB) {
+    return [wrappedFrom, wrappedTo];
+  } else {
+    return [wrappedFrom, WBNB, wrappedTo];
+  }
+}
+
 async function updatePriceInfo() {
   const from = document.getElementById("fromToken").value;
   const to = document.getElementById("toToken").value;
@@ -57,22 +68,14 @@ async function updatePriceInfo() {
   }
 
   try {
-    const path = getSwapPath(from, to);
     const inWei = web3.utils.toWei(amount.toString(), "ether");
+    const path = getSwapPath(from, to);
     const amounts = await router.methods.getAmountsOut(inWei, path).call();
-    const outAmount = parseFloat(web3.utils.fromWei(amounts[amounts.length - 1], "ether"));
-    document.getElementById("priceInfo").innerText = `${outAmount.toFixed(6)} ${getSymbol(to)}`;
+    const outAmount = web3.utils.fromWei(amounts[amounts.length - 1], "ether");
+    document.getElementById("priceInfo").innerText = `${parseFloat(outAmount).toFixed(6)} ${getSymbol(to)}`;
   } catch (err) {
     console.warn("⚠️ خطا در تخمین:", err.message);
     document.getElementById("priceInfo").innerText = "❌";
-  }
-}
-
-function getSwapPath(from, to) {
-  if (from === WBNB || to === WBNB) {
-    return [from, to];
-  } else {
-    return [from, WBNB, to]; // مسیر از طریق BNB
   }
 }
 
@@ -89,7 +92,7 @@ async function swapTokens() {
   const from = document.getElementById("fromToken").value;
   const to = document.getElementById("toToken").value;
   const amount = parseFloat(document.getElementById("amount").value);
-  if (!amount || from === to) return alert("ورودی نامعتبر است.");
+  if (!amount || from === to) return alert("مقدار نامعتبر یا توکن‌ها مشابه‌اند.");
 
   const path = getSwapPath(from, to);
   const inWei = web3.utils.toWei(amount.toString(), "ether");
@@ -104,15 +107,15 @@ async function swapTokens() {
       value: feeWei
     });
 
-    document.getElementById("status").innerText = "✅ کارمزد پرداخت شد";
+    document.getElementById("status").innerText = "✅ کارمزد پرداخت شد.";
 
-    if (from !== WBNB) {
+    if (from.toLowerCase() !== "bnb") {
       const token = new web3.eth.Contract(erc20ABI, from);
-      document.getElementById("status").innerText = "🔒 تایید توکن...";
+      document.getElementById("status").innerText = "🔒 تأیید توکن...";
       await token.methods.approve(routerAddress, inWei).send({ from: userAddress });
     }
 
-    document.getElementById("status").innerText = "🔁 در حال سواپ...";
+    document.getElementById("status").innerText = "🔁 انجام تراکنش...";
 
     await router.methods.swapExactTokensForTokens(
       inWei,
@@ -125,6 +128,6 @@ async function swapTokens() {
     document.getElementById("status").innerText = "✅ سواپ موفق!";
   } catch (err) {
     console.error("Swap error:", err);
-    document.getElementById("status").innerText = "❌ خطا در سواپ!";
+    document.getElementById("status").innerText = "❌ خطا در انجام سواپ!";
   }
 }
