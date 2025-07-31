@@ -1,24 +1,29 @@
-let web3, router, userAddress = null;
+let web3, router, rewardContract, userAddress = null;
 
 const routerAddress = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // PancakeSwap Router V2
-const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683";       // کیف پول مالک
-const FIXED_FEE_BNB = 0.00008; // قابل تغییر
-const WBNB = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";         // WBNB آدرس
+const rewardContractAddress = "0xa3e97bfd45fd6103026fc5c2db10f29b268e4e0d"; // ← آدرس قرارداد پاداش
+const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683";
+const FIXED_FEE_BNB = 0.00008;
+const WBNB = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
 
 window.addEventListener("load", () => disableUI(true));
 
 async function connectWallet() {
-  if (!window.ethereum) return alert("لطفاً Metamask نصب کنید.");
+  if (!window.ethereum) return alert("Please install Metamask.");
   await window.ethereum.request({ method: "eth_requestAccounts" });
   web3 = new Web3(window.ethereum);
   const accounts = await web3.eth.getAccounts();
   userAddress = accounts[0];
+
   router = new web3.eth.Contract(pancakeRouterABI, routerAddress);
+  rewardContract = new web3.eth.Contract(rewardDistributorABI, rewardContractAddress);
+
   document.getElementById("walletAddress").innerText = userAddress;
-  document.getElementById("connectButton").innerText = "🔌 متصل شد";
+  document.getElementById("connectButton").innerText = "🔌 Connected";
   fillTokenOptions();
   disableUI(false);
   updatePriceInfo();
+
   ["fromToken", "toToken", "amount"].forEach(id =>
     document.getElementById(id).addEventListener("input", updatePriceInfo)
   );
@@ -67,7 +72,7 @@ async function updatePriceInfo() {
     const outAmount = web3.utils.fromWei(amounts[amounts.length - 1], "ether");
     document.getElementById("priceInfo").innerText = `${parseFloat(outAmount).toFixed(6)} ${getSymbol(to)}`;
   } catch (err) {
-    console.warn("⚠️ خطا در تخمین:", err.message);
+    console.warn("⚠️ Error estimating price:", err.message);
     document.getElementById("priceInfo").innerText = "❌";
   }
 }
@@ -80,59 +85,50 @@ function reverseTokens() {
 }
 
 async function swapTokens() {
-  if (!userAddress) return alert("کیف پول متصل نیست.");
+  if (!userAddress) return alert("Wallet not connected.");
 
   const from = document.getElementById("fromToken").value;
   const to = document.getElementById("toToken").value;
   const amount = parseFloat(document.getElementById("amount").value);
-  if (!amount || from === to) return alert("مقدار نامعتبر یا توکن‌ها مشابه‌اند.");
+  if (!amount || from === to) return alert("Invalid amount or same tokens selected.");
 
   const inWei = web3.utils.toWei(amount.toString(), "ether");
   const feeWei = web3.utils.toWei(FIXED_FEE_BNB.toString(), "ether");
   const path = getSwapPath(from, to);
 
   try {
-    document.getElementById("status").innerText = "💰 پرداخت کارمزد...";
+    document.getElementById("status").innerText = "💰 Sending fee...";
     await web3.eth.sendTransaction({ from: userAddress, to: owner, value: feeWei });
-    document.getElementById("status").innerText = "✅ کارمزد پرداخت شد.";
+    document.getElementById("status").innerText = "✅ Fee sent.";
 
     if (from.toLowerCase() === "bnb") {
-      // BNB → Token
       await router.methods.swapExactETHForTokens(
-        0,
-        path,
-        userAddress,
-        Math.floor(Date.now() / 1000) + 600
+        0, path, userAddress, Math.floor(Date.now() / 1000) + 600
       ).send({ from: userAddress, value: inWei });
 
     } else if (to.toLowerCase() === "bnb") {
-      // Token → BNB
       const token = new web3.eth.Contract(erc20ABI, from);
       await token.methods.approve(routerAddress, inWei).send({ from: userAddress });
       await router.methods.swapExactTokensForETH(
-        inWei,
-        0,
-        path,
-        userAddress,
-        Math.floor(Date.now() / 1000) + 600
+        inWei, 0, path, userAddress, Math.floor(Date.now() / 1000) + 600
       ).send({ from: userAddress });
 
     } else {
-      // Token → Token
       const token = new web3.eth.Contract(erc20ABI, from);
       await token.methods.approve(routerAddress, inWei).send({ from: userAddress });
       await router.methods.swapExactTokensForTokens(
-        inWei,
-        0,
-        path,
-        userAddress,
-        Math.floor(Date.now() / 1000) + 600
+        inWei, 0, path, userAddress, Math.floor(Date.now() / 1000) + 600
       ).send({ from: userAddress });
     }
 
-    document.getElementById("status").innerText = "✅ سواپ موفق!";
+    document.getElementById("status").innerText = "✅ Swap successful. Claiming reward...";
+    
+    // 🟢 پاداش
+    await rewardContract.methods.claimReward().send({ from: userAddress });
+    document.getElementById("status").innerText = "🎁 Reward claimed successfully!";
+
   } catch (err) {
     console.error("Swap error:", err);
-    document.getElementById("status").innerText = "❌ خطا در انجام سواپ!";
+    document.getElementById("status").innerText = "❌ Swap or reward failed.";
   }
 }
