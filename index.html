@@ -1,27 +1,93 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Legend Swap</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #eee;
+      padding-top: 60px;
+    }
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 50px; background-color: #1a1a1a;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 15px; z-index: 1000; border-bottom: 1px solid #333;
+    }
+    .logo { font-weight: bold; font-size: 1.4rem; color: #00ffd0; }
+    .burger {
+      width: 28px; height: 22px; background: none; border: none;
+      flex-direction: column; justify-content: space-between; cursor: pointer;
+    }
+    .burger span {
+      display: block; height: 3px; background-color: #00ffd0;
+      border-radius: 2px; transition: 0.3s;
+    }
+    main.content {
+      max-width: 480px;
+      margin: 20px auto;
+      padding: 15px;
+      background-color: #222;
+      border-radius: 10px;
+      box-shadow: 0 0 8px #00ffd0aa;
+    }
+    select, input[type=number], button {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #00ffd0;
+      color: #121212;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover { background-color: #00c9a7; }
+    #priceInfo {
+      font-size: 1.2rem;
+      margin-top: 15px;
+      text-align: center;
+      color: #00ffd0;
+    }
+    #status {
+      margin-top: 10px;
+      font-size: 1rem;
+      text-align: center;
+      min-height: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>💱 Legend Swap</h1>
-  <p>کیف پول: <span id="walletAddress">Not Connected</span></p>
-  <button id="connectButton" onclick="connectWallet()">اتصال کیف پول</button>
-  <div>
+
+  <header class="navbar">
+    <div class="logo">Legend Swap</div>
+    <button class="burger" onclick="document.getElementById('sidebar')?.classList.toggle('active')">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="content">
+    <p>Wallet: <span id="walletAddress">Not Connected</span></p>
+    <button id="connectButton" onclick="connectWallet()">🔌 Connect Wallet</button>
+
     <select id="fromToken"></select>
-    <br>
     <select id="toToken"></select>
-    <br>
-    <input type="number" id="amount" placeholder="مقدار" />
-    <br>
-    <button id="reverseButton" onclick="reverseTokens()">🔁 جابجایی</button>
-  </div>
-  <div id="priceInfo" style="margin-top: 15px; font-size: 18px;">-</div>
-  <button id="swapButton" onclick="swapTokens()">🔄 سواپ</button>
-  <div id="status"></div>
+    <input type="number" id="amount" placeholder="Amount" />
+    <button id="reverseButton" onclick="reverseTokens()">🔁 Swap Tokens</button>
+
+    <div id="priceInfo">-</div>
+    <button id="swapButton" onclick="swapTokens()">🔄 Swap</button>
+    <div id="status"></div>
+  </main>
+
   <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
   <script src="abi.js"></script>
   <script src="tokens.js"></script>
