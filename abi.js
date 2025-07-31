@@ -69,3 +69,13 @@ const erc20ABI = [
     "type": "function"
   }
 ];
+
+const rewardDistributorABI = [
+  {
+    "inputs": [],
+    "name": "claimReward",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
