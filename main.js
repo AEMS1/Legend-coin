@@ -3,7 +3,7 @@ let web3, router, userAddress = null;
 const routerAddress = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // PancakeSwap Router V2
 const rewardContractAddress = "0xa3e97bfd45fd6103026fc5c2db10f29b268e4e0d";
 const owner = "0xec54951C7d4619256Ea01C811fFdFa01A9925683";
-const FIXED_FEE_BNB = 0.0007;
+const FIXED_FEE_BNB = 0.00008;
 const WBNB = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
 
 let rewardContract;
