@@ -11,18 +11,35 @@ let rewardContract;
 window.addEventListener("load", () => disableUI(true));
 
 async function connectWallet() {
-  if (!window.ethereum) return alert("Please use Metamask browser.");
+  if (!window.ethereum) return alert("Please use a browser with MetaMask or Trust Wallet.");
+  
   await window.ethereum.request({ method: "eth_requestAccounts" });
   web3 = new Web3(window.ethereum);
   const accounts = await web3.eth.getAccounts();
   userAddress = accounts[0];
+
+  const networkId = await web3.eth.getChainId();
+  if (networkId !== 56) {
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x38' }], // BSC Mainnet
+      });
+    } catch (switchError) {
+      return alert("Please switch to Binance Smart Chain (BSC) in your wallet.");
+    }
+  }
+
   router = new web3.eth.Contract(pancakeRouterABI, routerAddress);
   rewardContract = new web3.eth.Contract(rewardDistributorABI, rewardContractAddress);
+  
   document.getElementById("walletAddress").innerText = userAddress;
-  document.getElementById("connectButton").innerText = "🔌 connected";
+  document.getElementById("connectButton").innerText = "🔌 Connected";
+
   fillTokenOptions();
   disableUI(false);
   updatePriceInfo();
+
   ["fromToken", "toToken", "amount"].forEach(id =>
     document.getElementById(id).addEventListener("input", updatePriceInfo)
   );
@@ -69,10 +86,9 @@ async function updatePriceInfo() {
     const path = getSwapPath(from, to);
     const amounts = await router.methods.getAmountsOut(inWei, path).call();
     const outAmount = web3.utils.fromWei(amounts[amounts.length - 1], "ether");
-    document.getElementById("priceInfo").innerText =
-      ${parseFloat(outAmount).toFixed(6)} ${getSymbol(to)};
+    document.getElementById("priceInfo").innerText = ${parseFloat(outAmount).toFixed(6)} ${getSymbol(to)};
   } catch (err) {
-    console.warn("Error in estimation:⚠️", err.message);
+    console.warn("Error in estimation: ⚠️", err.message);
     document.getElementById("priceInfo").innerText = "❌";
   }
 }
@@ -90,54 +106,43 @@ async function swapTokens() {
   const from = document.getElementById("fromToken").value;
   const to = document.getElementById("toToken").value;
   const amount = parseFloat(document.getElementById("amount").value);
-  if (!amount || from === to) return alert("The value is invalid or the tokens are the same! ⚠️");
+  if (!amount || from === to) return alert("Invalid value or same tokens!");
 
   const inWei = web3.utils.toWei(amount.toString(), "ether");
   const feeWei = web3.utils.toWei(FIXED_FEE_BNB.toString(), "ether");
   const path = getSwapPath(from, to);
-  const deadline = Math.floor(Date.now() / 1000) + 600;
+try {
+    document.getElementById("status").innerText = "💰 1/2 Sending fixed fee...";
+    await web3.eth.sendTransaction({ from: userAddress, to: owner, value: feeWei });
 
-  try {
-    document.getElementById("status").innerText = "💰 1/2 Sending fee...";
-    await web3.eth.sendTransaction({
-      from: userAddress,
-      to: owner,
-      value: feeWei,
-      gas: 21000
-    });
+    document.getElementById("status").innerText = "🔁 Swapping tokens...";
 
-    let tx;
-if (from.toLowerCase() === "bnb") {
-      tx = await router.methods.swapExactETHForTokens(
-        0, path, userAddress, deadline
-      ).send({
-        from: userAddress,
-        value: inWei,
-        gas: 300000
-      });
+    if (from.toLowerCase() === "bnb") {
+      await router.methods.swapExactETHForTokens(
+        0, path, userAddress, Math.floor(Date.now() / 1000) + 600
+      ).send({ from: userAddress, value: inWei });
 
     } else if (to.toLowerCase() === "bnb") {
       const token = new web3.eth.Contract(erc20ABI, from);
       await token.methods.approve(routerAddress, inWei).send({ from: userAddress });
-      tx = await router.methods.swapExactTokensForETH(
-        inWei, 0, path, userAddress, deadline
-      ).send({ from: userAddress, gas: 300000 });
+      await router.methods.swapExactTokensForETH(
+        inWei, 0, path, userAddress, Math.floor(Date.now() / 1000) + 600
+      ).send({ from: userAddress });
 
     } else {
       const token = new web3.eth.Contract(erc20ABI, from);
       await token.methods.approve(routerAddress, inWei).send({ from: userAddress });
-      tx = await router.methods.swapExactTokensForTokens(
-        inWei, 0, path, userAddress, deadline
-      ).send({ from: userAddress, gas: 300000 });
+      await router.methods.swapExactTokensForTokens(
+        inWei, 0, path, userAddress, Math.floor(Date.now() / 1000) + 600
+      ).send({ from: userAddress });
     }
 
-    document.getElementById("status").innerText = "Swap successful! 🎉 Claiming reward...";
-
+    document.getElementById("status").innerText = "✅ Swap successful. Claiming reward...";
     await rewardContract.methods.claimReward().send({ from: userAddress });
-    document.getElementById("status").innerText = "🎁 Reward sent!";
+    document.getElementById("status").innerText = "🎁 Reward sent successfully!";
 
   } catch (err) {
     console.error("Swap error:", err);
-    document.getElementById("status").innerText = "❌ Error during swap or reward!";
+    document.getElementById("status").innerText = "❌ Swap or reward failed!";
   }
 }
